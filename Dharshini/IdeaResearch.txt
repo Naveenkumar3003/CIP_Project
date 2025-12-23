@@ -1,7 +1,6 @@
 Explainable & Accountable Blockchain-Assisted Federated IDS with Compact Audit Trails
 
 Problem:
-
 Operators need verifiable reasons for automated alerts and a compact, tamper-evident audit trail for each model update and decision; current BFL systems record updates but lack explainability and lightweight auditability.
 
 Why it’s novel ?
