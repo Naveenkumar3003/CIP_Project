@@ -1,1 +1,26 @@
+Explainable & Accountable Blockchain-Assisted Federated IDS with Compact Audit Trails
 
+Problem:
+
+Operators need verifiable reasons for automated alerts and a compact, tamper-evident audit trail for each model update and decision; current BFL systems record updates but lack explainability and lightweight auditability.
+
+Why it’s novel ?
+
+Store compact commitments + explainability metadata (e.g., SHAP summary or feature-importance hashes) on a permissioned blockchain. Combine digital signatures for authenticity and a redaction-aware policy for sensitive metadata, producing an auditable chain of decisions that is both explainable and privacy-respecting. 
+
+Approach (high level)
+
+Clients compute local explanation summaries for model updates (feature importance vectors → hashed summaries).
+
+Commit update hash + explanation hash + signature to blockchain.
+
+On suspicious updates, auditors can request verifiable explainability proofs (off-chain) linked to on-chain commitments.
+
+Optionally support redactable metadata for privacy compliance while keeping immutable proof of the redaction event.
+
+Datasets / Testbed:
+
+CIC-IDS2017, IoT-23 (for IoT IDS), and synthetic traces; implement a prototype that logs explainability commits to Hyperledger Fabric.
+
+Evaluation metrics:
+Explainability fidelity, auditability (proof size, verification time), detection accuracy, storage overhead for blockchain commitments.
