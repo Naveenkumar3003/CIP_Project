@@ -1,2 +1,88 @@
-hai i am sathishkumar
+1. Identity Authentication Using Blockchain + Cryptography (IEEE type)
+
+This paper proposes a structure of identity authentication using commercial cryptography like SM2/SM3/SM4 and blockchain for secure heterogeneous networks. 
+DHS Informatics
+
+✅ Good for:
+✔ Blockchain + cryptography
+✔ Network security with authentication
+📌 You can use this in your literature review and to propose improvements.
+
+📙 2. Blockchain for Security and Privacy — Systematic Review
+
+This paper reviews blockchain security & privacy research, identifying themes, challenges and future directions. 
+ResearchGate
+
+📌 Because it analyzed multiple IEEE & Scopus papers, it’s useful to:
+✔ Explain the research gap
+✔ Base your idea on security/privacy challenges
+✔ Propose your own solution or model
+
+📕 3. Paper on Blockchain Security Published in IEEE Access
+
+Paper discussing how original Proof-of-Work (PoW) compares to other blockchain models and security issues. 
+Department of Software Engineering
+
+Good for:
+✔ Understanding security limitations
+✔ Comparing blockchain protocols
+✔ Justifying why your idea is needed
+
+📗 4. (Not IEEE but valuable) Survey: Blockchain Technology Application in Security
+
+A research survey explaining blockchain’s role in networks, security, privacy, IoT, consensus, and cryptography. 
+ResearchGate
+
+Useful for:
+✔ Extensive literature review
+✔ Explaining security aspects
+✔ Supporting your proposed idea with existing findings
+
+📙 Bonus (Not IEEE but highly cited research)
+
+These might help for background and understanding cryptography & blockchain concepts:
+
+🧠 Blockchain for 5G and Beyond Networks: A State-of-the-Art Survey
+
+Explores integration of blockchain with modern networks / 5G and discusses security/privacy challenges. 
+arXiv
+
+🔐 Security Services Using Blockchains (Survey)
+
+Focuses on blockchain for authentication, confidentiality, privacy, integrity, and access control — great for your security section. 
+arXiv
+
+📌 How to use these in your research
+📝 Introduction
+
+• Start with general blockchain research and security challenges
+• Cite the systematic review and blockchain surveys
+
+📊 Literature Review
+
+• Compare identity authentication paper (blockchain + cryptography)
+• Use security/privacy framework from systematic review
+
+🚀 Problem Gap
+
+• Mention limitations in existing security models
+• Use IEEE Access paper about PoW limitations
+
+💡 Your Proposed Idea
+
+• Use cryptography & blockchain to improve authentication or privacy
+• Mention future work from systematic review
+
+🧾 Example citations (IEEE style)
+[1] “Identity Authentication Based on Domestic Commercial Cryptography with Blockchain in the Heterogeneous Alliance Network,” (IEEE type), 2022. :contentReference[oaicite:6]{index=6}
+
+[2] N. Moosavi and H. Taherdoost, “Blockchain Technology Application in Security: A Systematic Review,” Blockchains, vol.1, pp.58–72, 2023. :contentReference[oaicite:7]{index=7}
+
+[3] H. Baniata and A. Kertész, “Approaches to Overpower Proof-of-Work Blockchains Despite Minority,” IEEE Access, 2023. :contentReference[oaicite:8]{index=8}
+
+📍 Quick Research Paper Summary (for your project)
+Paper Title	Area	Why Useful
+Identity Authentication with Blockchain	Security + Cryptography	Good for authentication models
+Blockchain for Security & Privacy (Systematic Review)	Blockchain Security & Privacy	Excellent literature support & research direction
+Blockchain Security in IEEE Access	Blockchain Protocol Security	Helps justify security challenges
 
