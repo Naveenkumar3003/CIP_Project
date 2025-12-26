@@ -1,4 +1,4 @@
-🔐 1. Blockchain-Based Secure Data Transmission Architecture (IEEE)
+ 1. Blockchain-Based Secure Data Transmission Architecture (IEEE)
 
 Area:
 ✔ Network Security
@@ -32,11 +32,11 @@ Helps justify why blockchain is better than centralized security models
 
 📚 Use in your work
 
-    Literature review (secure data transmission)
+ Literature review (secure data transmission)
 
-    Architecture comparison
+ Architecture comparison
 
-   Motivation for blockchain-based network security
+ Motivation for blockchain-based network security
 
 -------------------------------------------------------------------------------------------------------
 8. Decentralized Identity and Authentication in Network Security Using Blockchain (IEEE-type)
