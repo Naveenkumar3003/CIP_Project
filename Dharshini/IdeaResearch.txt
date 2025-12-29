@@ -1,7 +1,3 @@
-
-
-
-
 1. Blockchain-Based Secure Data Transmission Architecture (IEEE)
 
 Area:
