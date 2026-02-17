@@ -1,0 +1,68 @@
+import socket
+import json
+import hashlib
+from cryptography.hazmat.primitives.asymmetric import ec
+from cryptography.hazmat.primitives import serialization
+
+HOST = 'localhost'
+PORT = 9001
+
+SUCI = "suci_001"
+K = "long_term_secret_key"
+
+# Generate UE ECC key pair
+ue_private_key = ec.generate_private_key(ec.SECP256R1())
+ue_public_key = ue_private_key.public_key()
+
+ue_public_bytes = ue_public_key.public_bytes(
+    encoding=serialization.Encoding.PEM,
+    format=serialization.PublicFormat.SubjectPublicKeyInfo
+).decode()
+
+client = socket.socket()
+client.connect((HOST, PORT))
+
+print("\n[STEP 1] UE → AMF : Sending SUCI and UE Public Key")
+
+client.send(json.dumps({
+    "SUCI": SUCI,
+    "UE_PUBLIC_KEY": ue_public_bytes
+}).encode())
+
+challenge = json.loads(client.recv(4096).decode())
+
+print("\n[STEP 6] AMF → UE : Received RAND and AUTN")
+
+RAND = challenge["RAND"]
+amf_public_key_pem = challenge["AMF_PUBLIC_KEY"]
+
+from cryptography.hazmat.primitives.serialization import load_pem_public_key
+
+amf_public_key = load_pem_public_key(amf_public_key_pem.encode())
+
+print("\n🔑 [UE] ECC Key Exchange (ECDH)")
+print("   Using Curve: SECP256R1")
+print("   Mathematical Operation: SharedSecret = d_UE × Q_AMF")
+
+shared_secret = ue_private_key.exchange(ec.ECDH(), amf_public_key)
+
+print("   Derived Shared Secret =", shared_secret.hex())
+print("   ✔ Shared Secret Established")
+
+print("\n🔐 [UE] Computing RES*")
+print("   Formula: RES* = SHA256(K || RAND)")
+print("   K =", K)
+print("   RAND =", RAND)
+
+RES = hashlib.sha256((K + RAND).encode()).hexdigest()
+
+print("   Computed RES* =", RES)
+
+print("\n[STEP 8] UE → AMF : Sending RES")
+
+client.send(json.dumps({"RES": RES}).encode())
+
+result = client.recv(4096)
+print("\nAuthentication Result:", result.decode())
+
+client.close()
