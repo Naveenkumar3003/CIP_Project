@@ -9,16 +9,22 @@ HOST = 'localhost'
 PORT = 9001
 AUSF_PORT = 9002
 
-# ECDH Key
 amf_private_key = ec.generate_private_key(ec.SECP256R1())
 amf_public_key = amf_private_key.public_key()
+
+public_numbers = amf_public_key.public_numbers()
+Qx = hex(public_numbers.x)
+Qy = hex(public_numbers.y)
+
+print("\n[AMF] Public Key:")
+print("Qx =", Qx)
+print("Qy =", Qy)
 
 amf_public_bytes = amf_public_key.public_bytes(
     encoding=serialization.Encoding.PEM,
     format=serialization.PublicFormat.SubjectPublicKeyInfo
 ).decode()
 
-# NEW: Digital Signature Key
 amf_sign_private = ec.generate_private_key(ec.SECP256R1())
 amf_sign_public = amf_sign_private.public_key()
 
@@ -36,21 +42,22 @@ print("AMF Running...")
 conn, addr = server.accept()
 data = json.loads(conn.recv(4096).decode())
 
-print("\n[STEP 1] UE → AMF : Received SUCI and UE Public Key")
+print("\n[STEP 1] UE -> AMF : Received SUCI (suci_001) and UE Public Key")
 
-# Contact AUSF
 ausf = socket.socket()
 ausf.connect((HOST, AUSF_PORT))
 ausf.send(json.dumps({"SUCI": data["SUCI"]}).encode())
 auth_vector = json.loads(ausf.recv(4096).decode())
 
-print("\n[STEP 6] AMF → UE : Sending RAND, AUTN, AMF Public Key")
+RAND = auth_vector["RAND"]
+AUTN = auth_vector["AUTN"]
 
-# ---- DIGITAL SIGNATURE PART ----
+print(f"\n[STEP 6] AMF -> UE : Sending RAND ({RAND}), AUTN ({AUTN}), AMF Public Key (Qx={Qx}, Qy={Qy})")
+
 print("\n[AMF] Digital Signature Creation (ECDSA)")
 print("Signing Data = RAND + AMF_PublicKey")
 
-message = (auth_vector["RAND"] + amf_public_bytes).encode()
+message = (RAND + amf_public_bytes).encode()
 signature = amf_sign_private.sign(
     message,
     ec.ECDSA(hashes.SHA256())
@@ -59,15 +66,16 @@ signature = amf_sign_private.sign(
 print("Signature Generated =", signature.hex())
 
 conn.send(json.dumps({
-    "RAND": auth_vector["RAND"],
-    "AUTN": auth_vector["AUTN"],
+    "RAND": RAND,
+    "AUTN": AUTN,
     "AMF_PUBLIC_KEY": amf_public_bytes,
     "SIGNATURE": signature.hex(),
     "AMF_SIGN_PUBLIC": amf_sign_public_bytes
 }).encode())
 
-# Receive RES
 res_data = json.loads(conn.recv(4096).decode())
+
+print(f"\n[STEP 9] AMF -> AUSF : Forwarding RES* ({res_data['RES']})")
 
 print("\n[AMF] ECC Key Exchange (ECDH)")
 print("Using Curve: SECP256R1")
@@ -85,7 +93,6 @@ print("Formula: K_AMF = SHA256(SharedSecret)")
 session_key = hashlib.sha256(shared_secret).hexdigest()
 print("Session Key (K_AMF) =", session_key)
 
-# Forward RES
 ausf.send(json.dumps(res_data).encode())
 result = ausf.recv(4096)
 
