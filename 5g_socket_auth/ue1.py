@@ -14,6 +14,14 @@ K = "long_term_secret_key"
 ue_private_key = ec.generate_private_key(ec.SECP256R1())
 ue_public_key = ue_private_key.public_key()
 
+public_numbers = ue_public_key.public_numbers()
+Qx = hex(public_numbers.x)
+Qy = hex(public_numbers.y)
+
+print("\n[UE] Public Key:")
+print("Qx =", Qx)
+print("Qy =", Qy)
+
 ue_public_bytes = ue_public_key.public_bytes(
     encoding=serialization.Encoding.PEM,
     format=serialization.PublicFormat.SubjectPublicKeyInfo
@@ -22,7 +30,7 @@ ue_public_bytes = ue_public_key.public_bytes(
 client = socket.socket()
 client.connect((HOST, PORT))
 
-print("\n[STEP 1] UE → AMF : Sending SUCI and UE Public Key")
+print(f"\n[STEP 1] UE -> AMF : Sending SUCI (suci_001) and UE Public Key (Qx={Qx}, Qy={Qy})")
 
 client.send(json.dumps({
     "SUCI": SUCI,
@@ -31,13 +39,13 @@ client.send(json.dumps({
 
 challenge = json.loads(client.recv(4096).decode())
 
-print("\n[STEP 6] AMF → UE : Received RAND and AUTN")
-
 RAND = challenge["RAND"]
+AUTN = challenge["AUTN"]
 amf_public_key_pem = challenge["AMF_PUBLIC_KEY"]
 
-# ---- DIGITAL SIGNATURE VERIFICATION ----
-print("\n[UE] Digital Signature Verification (ECDSA)")
+print(f"\n[STEP 6] AMF -> UE : Received RAND ({RAND}) and AUTN ({AUTN})")
+
+print(f"\n[STEP 7] UE : Digital Signature Verification on RAND ({RAND})")
 
 signature = bytes.fromhex(challenge["SIGNATURE"])
 amf_sign_public_pem = challenge["AMF_SIGN_PUBLIC"]
@@ -57,7 +65,6 @@ except:
     client.close()
     exit()
 
-# ---- ECDH SAME AS BEFORE ----
 print("\n[UE] ECC Key Exchange (ECDH)")
 print("Using Curve: SECP256R1")
 print("Mathematical Operation: SharedSecret = d_UE × Q_AMF")
@@ -74,13 +81,14 @@ print("K =", K)
 print("RAND =", RAND)
 
 RES = hashlib.sha256((K + RAND).encode()).hexdigest()
+
 print("Computed RES* =", RES)
 
-print("\n[STEP 8] UE → AMF : Sending RES")
+print(f"\n[STEP 8] UE -> AMF : Sending RES* ({RES})")
 
 client.send(json.dumps({"RES": RES}).encode())
 
-result = client.recv(4096)
-print("\nAuthentication Result:", result.decode())
+result = client.recv(4096).decode()
+print("\nAuthentication Result:", result)
 
 client.close()
