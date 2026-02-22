@@ -39,7 +39,7 @@ data = json.loads(conn.recv(4096).decode())
 
 auth_vector = generate_auth_vector(data["SUCI"])
 
-print("\n[STEP 4] UDM → AUSF : Sending RAND, AUTN, XRES*")
+print(f"\n[STEP 4] UDM -> AUSF : Sending RAND ({auth_vector['RAND']}), AUTN (AUTN_TOKEN), XRES* ({auth_vector['XRES']})")
 
 conn.send(json.dumps(auth_vector).encode())
 conn.close()
